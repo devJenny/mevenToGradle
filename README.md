@@ -14,3 +14,4 @@
 ![img.png](src/main/resources/static/images/3_1_comment.png)
 ![img.png](src/main/resources/static/images/4_1_join.png)
 ![img.png](src/main/resources/static/images/5_1_login.png)
+![img.png](src/main/resources/static/images/error.png)

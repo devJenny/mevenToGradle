@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--
+ fileName       : home.html
+ author         : devjenny
+ date           : 2023.06.28
+ description    :
+ ===========================================================
+ DATE              AUTHOR             NOTE
+ -----------------------------------------------------------
+ 2023-06-28       devjenny       최초 생성
+ 2024-06-21       devjenny       jsp -> thymeleaf 변경 및 수정
+-->
+
+<!-- 공통 head -->
+<th:block th:replace="~{fragments/head :: common-head}"></th:block>
+
+ <!--내비게이션 바-->
+<nav class="navbar navbar-expand-lg bg-light" th:fragment="common-nav">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">💛HOME💛</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+<!--    <div class="collapse navbar-collapse" id="navbarNavDropdown">-->
+<!--      <ul class="navbar-nav">-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link active" aria-current="page" href="/guide/">홈</a>-->
+<!--        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link" href="/guide/page/noticeList">게시판</a>-->
+<!--        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link" href="/guide/join">회원가입</a>-->
+<!--        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link" href="/guide/login">로그인</a>-->
+<!--        </li>-->
+<!--        <%&#45;&#45;                <li class="nav-item dropdown">&#45;&#45;%>-->
+<!--        <%&#45;&#45;                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"  aria-expanded="false">&#45;&#45;%>-->
+<!--        <%&#45;&#45;                        접속&#45;&#45;%>-->
+<!--        <%&#45;&#45;                    </a>&#45;&#45;%>-->
+<!--        <%&#45;&#45;                    <ul class="dropdown-menu">&#45;&#45;%>-->
+<!--        <%&#45;&#45;                        <li><a class="dropdown-item" href="#">Action</a></li>&#45;&#45;%>-->
+<!--        <%&#45;&#45;                        <li><a class="dropdown-item" href="#">Another action</a></li>&#45;&#45;%>-->
+<!--        <%&#45;&#45;                        <li><a class="dropdown-item" href="#">Something else here</a></li>&#45;&#45;%>-->
+<!--        <%&#45;&#45;                    </ul>&#45;&#45;%>-->
+<!--        <%&#45;&#45;                </li>&#45;&#45;%>-->
+<!--      </ul>-->
+<!--    </div>-->
+  </div>
+</nav>
+</html>

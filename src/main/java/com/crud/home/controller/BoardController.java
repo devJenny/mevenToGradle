@@ -4,9 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.crud.home.service.CommentService;
-import com.crud.home.service.NoticeService;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import com.crud.home.service.BoardService;
+//import com.github.pagehelper.Page;
+//import com.github.pagehelper.PageHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,26 +15,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 
+@RequiredArgsConstructor
 @Controller
 @Slf4j
-public class NoticeController {
+public class BoardController {
 
-    @Resource
-    NoticeService noticeService;
+    private final BoardService noticeService;
 
-    @Resource
-    CommentService commentService;
+    private final CommentService commentService;
 
 
-    /**
-     * page 요청 / 리스트
-     *
-     * @param param
-     * @return
-     * @throws Exception
-     */
     @RequestMapping(value = {"/page/noticeList","/page"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String noticeList(@RequestParam Map<String, Object> param, Model model) throws Exception {
 
@@ -46,17 +38,17 @@ public class NoticeController {
 
         int pageSize = 10;
         String orderBy = "b_no DESC";
-        Page<List<Map<String, Object>>> notice = new Page<>();
-        PageHelper.startPage(pageNum, pageSize, orderBy);
-
-        notice = noticeService.selectNoticeList(param);
+//        Page<List<Map<String, Object>>> notice = new Page<>();
+//        PageHelper.startPage(pageNum, pageSize, orderBy);
+//
+//        notice = noticeService.selectNoticeList(param);
 //        log.info("상세페이지2" + notice);
 
 
-        model.addAttribute("board", notice);
-        model.addAttribute("pageNum", notice.getPageNum());
-        model.addAttribute("total", notice.getTotal());
-        model.addAttribute("pages", notice.getPages());
+//        model.addAttribute("board", notice);
+//        model.addAttribute("pageNum", notice.getPageNum());
+//        model.addAttribute("total", notice.getTotal());
+//        model.addAttribute("pages", notice.getPages());
 
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

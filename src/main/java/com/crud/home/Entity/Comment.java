@@ -8,6 +8,16 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * fileName       : Comment
+ * date           : 2024.06.21
+ * description    :
+ * ===========================================================
+ * DATE              AUTHOR             NOTE
+ * -----------------------------------------------------------
+ * 2024-06-21       devjenny       최초 생성
+ */
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

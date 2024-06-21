@@ -1,5 +1,15 @@
 package com.crud.home.Entity;
 
+/**
+ * fileName       : Board
+ * date           : 2024.06.21
+ * description    :
+ * ===========================================================
+ * DATE              AUTHOR             NOTE
+ * -----------------------------------------------------------
+ * 2024-06-21       devjenny       최초 생성
+ */
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

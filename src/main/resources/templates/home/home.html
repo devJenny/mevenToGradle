@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--
+ fileName       : home.html
+ author         : devjenny
+ date           : 2023.06.28
+ description    :
+ ===========================================================
+ DATE              AUTHOR             NOTE
+ -----------------------------------------------------------
+ 2023-06-28       devjenny       최초 생성
+ 2024-06-21       devjenny       jsp -> thymeleaf 변경 및 수정
+-->
+
+<!-- 공통 head -->
+<th:block th:replace="~{fragments/head :: common-head}"></th:block>
+
+<body>
+<!-- 내비게이션 바 -->
+<th:block th:replace="~{fragments/nav :: common-nav}"></th:block>
+
+<!-- 메인 이미지 -->
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img th:src="@{/images/photo_1.jpg}" onerror="this.src='/images/photo_1.jpg'" />
+      <div class="carousel-caption d-none d-md-block">
+        <h5>HOME</h5>
+        <p>웰컴 웰컴 홈</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img th:src="@{/images/photo_2.jpg}" onerror="this.src='/images/photo_1.jpg'" />
+      <div class="carousel-caption d-none d-md-block">
+        <h5></h5>
+        <p>웰컴 웰컴 홈</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img th:src="@{/images/photo_3.jpg}" onerror="this.src='/images/photo_1.jpg'" />
+
+      <div class="carousel-caption d-none d-md-block">
+        <h5></h5>
+        <p>웰컴 웰컴 홈</p>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+<!--<%&#45;&#45;<div class="container mt-3">&#45;&#45;%>-->
+<!--<%&#45;&#45;  <div class="mt-4 p-5 bg-Danger text-white rounded">&#45;&#45;%>-->
+<!--<%&#45;&#45;    <h1>JE HOME</h1>&#45;&#45;%>-->
+<!--<%&#45;&#45;    <p>Welcome to my Home :)</p>&#45;&#45;%>-->
+<!--<%&#45;&#45;    <p><a href="/guide/page/noticeList" style="color:white; text-decoration: none;">게시판 이동</a></p>&#45;&#45;%>-->
+<!--<%&#45;&#45;  </div>&#45;&#45;%>-->
+<!--<%&#45;&#45;</div>&#45;&#45;%>-->
+
+</body>
+</html>

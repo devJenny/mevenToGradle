@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: guide
+  profiles:
+    default: local
+  main:
+    allow-circular-references: true
+
+  devtools:
+    livereload:
+      enabled: true
+    add-properties: true
+
+  output:
+    ansi:
+      enabled: detect
+
+  jasypt:
+    encryptor:
+      bean: jasyptStringEncryptor
+
+  servlet:
+    multipart:
+      max-file-size: 225MB
+      max-request-size: 225MB
+
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
+  jmx:
+    enabled: false
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  datasource:
+    url: jdbc:mariadb://localhost:3306/temps?characterEncoding=UTF-8&allowMultiQueries=true
+    username:
+    password:
+    driver-class-name: org.mariadb.jdbc.Driver
+
+mybatis:
+  config-location: classpath:mybatis.xml
+
+server:
+  port: 8080
+  servlet:
+    context-path: /${spring.application.name}
+    session:
+      timeout: 30m
+  error:
+    path: /error
+    whitelabel:
+      enabled: false
+    include-exception: true
+
+logging:
+  pattern:
+    console: '%(%d{yyyy-MM-dd HH:mm:ss.SSS} %30.30logger:%-4line) %-5level > %msg\n'
+    file: '%(%d{yyyy-MM-dd HH:mm:ss.SSS} %30.30logger:%-4line) %-5level > %msg\n'
+  config: classpath:logback-spring.xml
+  file:
+    max-history: 7
+    max-size: 10MB
+    path: ${LOGGING_BASE_PATH:/data/log}/${spring.application.name}
+  level:
+    root: info
+    org.springgramework.web: error
+    org.springframework.web.filter.CommonsRequestLoggingFilter: error
+    #com.klcube.soda.mapper.CommonMapper : debug

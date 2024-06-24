@@ -47,12 +47,12 @@ spring:
     defer-datasource-initialization: true
     #    hibernate.hbm2ddl.auto: update
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 server:
   port: 9090
   servlet:
-    context-path: /${spring.application.name}
+#    context-path: /${spring.application.name}
     session:
       timeout: 30m
   error:

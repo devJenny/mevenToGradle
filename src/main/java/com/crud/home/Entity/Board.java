@@ -1,15 +1,5 @@
 package com.crud.home.Entity;
 
-/**
- * fileName       : Board
- * date           : 2024.06.21
- * description    :
- * ===========================================================
- * DATE              AUTHOR             NOTE
- * -----------------------------------------------------------
- * 2024-06-21       devjenny       최초 생성
- */
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +21,8 @@ public class Board {
     private Long id;
 
     @Comment("회원 ID")
+//    @ManyToOne
+//    @JoinColumn(name = "memberId")
     private Long memberId; // join 예정
 
     @Comment("제목")

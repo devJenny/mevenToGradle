@@ -3,12 +3,15 @@ package com.crud.home.controller;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.crud.home.Entity.Board;
+import com.crud.home.domain.BoardCreateReqDto;
 import com.crud.home.service.CommentService;
 import com.crud.home.service.BoardService;
 //import com.github.pagehelper.Page;
 //import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Comment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,21 +21,23 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Controller
+@RequestMapping("/board")
 @Slf4j
 public class BoardController {
 
-    private final BoardService noticeService;
+    private final BoardService boardService;
 
     private final CommentService commentService;
 
+    @Comment("게시판 메인")
+//    @RequestMapping(value = {"/board","/"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @GetMapping("/")
+    public String board(@RequestParam Map<String, Object> param, Model model) throws Exception {
 
-    @RequestMapping(value = {"/page/noticeList","/page"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String noticeList(@RequestParam Map<String, Object> param, Model model) throws Exception {
-
-        log.info("상세페이지1" + param);
+//        log.info("상세페이지1" + param);
         int pageNum = 0;
 
-        if (param.get("pageNum") != null ) {
+        if (param.get("pageNum") != null) {
             pageNum = Integer.parseInt((String) param.get("pageNum"));
         }
 
@@ -50,116 +55,86 @@ public class BoardController {
 //        model.addAttribute("total", notice.getTotal());
 //        model.addAttribute("pages", notice.getPages());
 
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, -1); //7일간 보이도록 하기위해서.
         String nowday = format.format(cal.getTime());
 
-        model.addAttribute("nowday",nowday);
+        model.addAttribute("nowday", nowday);
 
-        return "notice/noticeList";
+        return "board/main";
     }
 
-    /**
-     * 게시물 등록 페이지
-     *
-     * @return
-     */
-    @GetMapping("/page/noticeResister")
-    public String noticeResister() {
-        return "notice/resister";
+    @Comment("게시물 등록 페이지")
+    @GetMapping("/page")
+    public String boardCreate() {
+        return "board/resister";
     }
 
-    /**
-     * 게시물 등록
-     *
-     * @param param
-     * @return
-     */
-    @PostMapping("/page/noticeResister")
-    public String noticeResister(@RequestParam Map<String, Object> param, Model model) throws Exception {
+    @Comment("게시물 등록")
+    @PostMapping("/page")
+    public String boardCreate(BoardCreateReqDto dto, Model model) throws Exception {
 
-        int result = noticeService.insertBoard(param);
-        log.info("게시물등록" + result);
+        Board result = boardService.insertBoard(dto);
+        log.info("게시물등록 : {}" + result);
         model.addAttribute("글쓰기", result);
 
-        return "redirect:/page/noticeList";
+        return "redirect:/board/";
     }
 
-
-    /**
-     * 상세 페이지
-     *
-     * @param id
-     * @param model
-     * @return
-     */
+    @Comment("상세 페이지")
     @GetMapping("/page/{id}")
-    public String noticeDetail(@PathVariable Long id,@RequestParam Map<String, Object> param, Model model) throws Exception {
-        noticeService.hits(id);
-        List<Map<String, Object>> result = noticeService.findById(id);
+    public String boardDetail(@PathVariable Long id, @RequestParam Map<String, Object> param, Model model) throws Exception {
+        boardService.hits(id);
+        List<Map<String, Object>> result = boardService.findById(id);
         model.addAttribute("board", result);
-        log.info("상세페이지" + result);
+//        log.info("상세페이지" + result);
 
 
 //        // 댓글 조회
 //        List<Map<String, Object>> comment = commentService.commentList(id);
 //        model.addAttribute("comment", comment);
 
-        noticeService.countComment(id);
+        boardService.countComment(id);
 
-
-        return "/notice/detail";
+        return "board/detail";
     }
 
 
+    @Comment("수정")
     @GetMapping("/page/update/{id}")
-    public String updateForm(@PathVariable Long id, Model model) {
-        List<Map<String, Object>> result = noticeService.findById(id);
+    public String boardUpdate(@PathVariable Long id, Model model) {
+        List<Map<String, Object>> result = boardService.findById(id);
         model.addAttribute("updateBoard", result);
-        log.info("result" + result);
+//        log.info("result" + result);
 
-
-
-        return "/notice/update";
+        return "board/update";
     }
 
     @PostMapping("/page/update")
-    public String updateForm(@RequestParam Map<String, Object> param, Model model) {
+    public String boardUpdate(@RequestParam Map<String, Object> param, Model model) {
 
-        noticeService.updateBoard(param);
-        log.info("업데이트" + param);
+        boardService.updateBoard(param);
+//        log.info("업데이트" + param);
         Long num = Long.parseLong((String) param.get("b_no"));
-        List<Map<String, Object>> result = noticeService.findById(num);
+        List<Map<String, Object>> result = boardService.findById(num);
 
         model.addAttribute("board", result);
 
 //        return "redirect:/page/"+param.get("b_no");
-        return "notice/detail";
+        return "board/detail";
     }
 
 
-    /**
-     * 게시물 삭제
-     *
-     * @param id
-     * @return
-     */
-    @GetMapping("/page/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        noticeService.delete(id);
-        log.info("게시물 삭제"+id);
-        return "redirect:/page/noticeList";
+    @Comment("게시물 삭제")
+    @DeleteMapping("/page/{id}")
+    public String boardDelete(@PathVariable Long id) {
+        boardService.delete(id);
+//        log.info("게시물 삭제" + id);
+        return "redirect:/";
     }
 
-
-    /**
-     * AJAX 요청
-     *
-     * @return
-     * @throws Exception
-     */
+    @Comment("Ajax 요청")
     @GetMapping(value = "/api/userStatus")
     public ResponseEntity<List<Map<String, Object>>> userStatus() throws Exception {
 

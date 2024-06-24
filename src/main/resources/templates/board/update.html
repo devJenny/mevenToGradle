@@ -5,20 +5,17 @@
   Time: 오후 4:37
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<html>
-<head>
-    <title>Title</title>
-    <script type="text/javascript" src="<c:url value='/js/jquery-1.12.2.min.js' />"></script>
-    <script type="text/javascript" src="<c:url value='/js/jquery-ui.1.9.2.min.js' />"></script>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap.min.css' />">
-    <link rel="stylesheet" type="text/css" href="<c:url value='/css/style.css' />">
 
-</head>
+<html>
+
+<!-- 공통 head -->
+<th:block th:replace="~{fragments/head :: common-head}"></th:block>
+
 <body>
+
+<!-- 내비게이션 바 -->
+<th:block th:replace="~{fragments/nav :: common-nav}"></th:block>
+
 <div class="container">
     <h2 class="my-3 border-bottom pb-2">업데이트</h2>
 

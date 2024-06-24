@@ -3,7 +3,7 @@ package com.crud.home.service;
 //import com.github.pagehelper.Page;
 import com.crud.home.Entity.Board;
 import com.crud.home.Repository.BoardRepository;
-import com.crud.home.domain.BoardCreateReqDto;
+import com.crud.home.domain.BoardReqDto;
 import com.crud.home.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +23,7 @@ public class BoardService {
     private final BoardMapper boardMapper = BoardMapper.INSTANCE;
 
     @Comment("게시글 저장")
-    public Board insertBoard(BoardCreateReqDto dto) {
+    public Board insertBoard(BoardReqDto dto) {
 
         Long memberId = 1L;
         Board board = boardMapper.toEntity(dto);
@@ -35,13 +33,17 @@ public class BoardService {
         board.setHits(2L);
 
         Board save = boardRepository.save(board);
-
+//        BoardResDto boardResDto = boardMapper.toDtoRes(board);
         return save;
     }
 
-    public List<Map<String, Object>> findById(Long id) {
+    public List<Board> findByAll() {
 //        return noticeMapper.findById(id);
-        return null;
+
+
+        List<Board> all = boardRepository.findAll();
+        return all;
+
     }
 
 //    public List<Map<String, Object>> selectAll(Map<String, Object> param) {

@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.crud.home.Entity.Board;
-import com.crud.home.domain.BoardCreateReqDto;
+import com.crud.home.domain.BoardReqDto;
 import com.crud.home.service.CommentService;
 import com.crud.home.service.BoardService;
 //import com.github.pagehelper.Page;
@@ -32,14 +32,14 @@ public class BoardController {
     @Comment("게시판 메인")
 //    @RequestMapping(value = {"/board","/"}, method = {RequestMethod.GET, RequestMethod.POST})
     @GetMapping("/")
-    public String board(@RequestParam Map<String, Object> param, Model model) throws Exception {
+    public String board(BoardReqDto dto, Model model) throws Exception {
 
 //        log.info("상세페이지1" + param);
         int pageNum = 0;
 
-        if (param.get("pageNum") != null) {
-            pageNum = Integer.parseInt((String) param.get("pageNum"));
-        }
+//        if (param.get("pageNum") != null) {
+//            pageNum = Integer.parseInt((String) param.get("pageNum"));
+//        }
 
         int pageSize = 10;
         String orderBy = "b_no DESC";
@@ -49,8 +49,8 @@ public class BoardController {
 //        notice = noticeService.selectNoticeList(param);
 //        log.info("상세페이지2" + notice);
 
-
-//        model.addAttribute("board", notice);
+        List<Board> byAll = boardService.findByAll();
+        model.addAttribute("board", byAll);
 //        model.addAttribute("pageNum", notice.getPageNum());
 //        model.addAttribute("total", notice.getTotal());
 //        model.addAttribute("pages", notice.getPages());
@@ -73,21 +73,21 @@ public class BoardController {
 
     @Comment("게시물 등록")
     @PostMapping("/page")
-    public String boardCreate(BoardCreateReqDto dto, Model model) throws Exception {
+    public String boardCreate(BoardReqDto dto, Model model) {
 
-        Board result = boardService.insertBoard(dto);
-        log.info("게시물등록 : {}" + result);
-        model.addAttribute("글쓰기", result);
+        Board board = boardService.insertBoard(dto);
+        log.info("게시물등록 : {}" + board);
+        model.addAttribute("글쓰기", board);
 
         return "redirect:/board/";
     }
 
     @Comment("상세 페이지")
     @GetMapping("/page/{id}")
-    public String boardDetail(@PathVariable Long id, @RequestParam Map<String, Object> param, Model model) throws Exception {
+    public String boardDetail(@PathVariable Long id, @RequestParam Map<String, Object> param, Model model)  {
         boardService.hits(id);
-        List<Map<String, Object>> result = boardService.findById(id);
-        model.addAttribute("board", result);
+//        List<Map<String, Object>> result = boardService.findById(id);
+//        model.addAttribute("board", result);
 //        log.info("상세페이지" + result);
 
 
@@ -95,7 +95,7 @@ public class BoardController {
 //        List<Map<String, Object>> comment = commentService.commentList(id);
 //        model.addAttribute("comment", comment);
 
-        boardService.countComment(id);
+//        boardService.countComment(id);
 
         return "board/detail";
     }
@@ -104,8 +104,8 @@ public class BoardController {
     @Comment("수정")
     @GetMapping("/page/update/{id}")
     public String boardUpdate(@PathVariable Long id, Model model) {
-        List<Map<String, Object>> result = boardService.findById(id);
-        model.addAttribute("updateBoard", result);
+//        List<Map<String, Object>> result = boardService.findById(id);
+//        model.addAttribute("updateBoard", result);
 //        log.info("result" + result);
 
         return "board/update";
@@ -117,9 +117,9 @@ public class BoardController {
         boardService.updateBoard(param);
 //        log.info("업데이트" + param);
         Long num = Long.parseLong((String) param.get("b_no"));
-        List<Map<String, Object>> result = boardService.findById(num);
+//        List<Map<String, Object>> result = boardService.findById(num);
 
-        model.addAttribute("board", result);
+//        model.addAttribute("board", result);
 
 //        return "redirect:/page/"+param.get("b_no");
         return "board/detail";

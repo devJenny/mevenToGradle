@@ -1,7 +1,8 @@
 package com.crud.home.mapper;
 
 import com.crud.home.Entity.Board;
-import com.crud.home.domain.BoardCreateReqDto;
+import com.crud.home.domain.BoardReqDto;
+import com.crud.home.domain.BoardResDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -9,7 +10,6 @@ import org.mapstruct.factory.Mappers;
 public interface BoardMapper {
     BoardMapper INSTANCE = Mappers.getMapper(BoardMapper.class);
 
-    Board toEntity(BoardCreateReqDto dto);
+    Board toEntity(BoardReqDto dto);
 
-    BoardCreateReqDto toDto(Board board);
 }

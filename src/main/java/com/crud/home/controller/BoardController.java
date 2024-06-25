@@ -84,18 +84,18 @@ public class BoardController {
 
     @Comment("상세 페이지")
     @GetMapping("/page/{id}")
-    public String boardDetail(@PathVariable Long id, @RequestParam Map<String, Object> param, Model model)  {
-        boardService.hits(id);
-//        List<Map<String, Object>> result = boardService.findById(id);
-//        model.addAttribute("board", result);
-//        log.info("상세페이지" + result);
-
+    public String boardDetail(@PathVariable("id") Long id, Model model)  {
+//        boardService.hits(id);
+        Board result = boardService.findById(id);
+        log.info("상세페이지" + result);
+        model.addAttribute("board", result);
 
 //        // 댓글 조회
 //        List<Map<String, Object>> comment = commentService.commentList(id);
 //        model.addAttribute("comment", comment);
 
 //        boardService.countComment(id);
+
 
         return "board/detail";
     }

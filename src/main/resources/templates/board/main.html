@@ -1,30 +1,27 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <!-- 공통 head -->
 <th:block th:replace="~{fragments/head :: common-head}"></th:block>
 
-<head>
-    <script th:inline="javascript">
-        function test() {
-            $.ajax({
-                url: "@{/api/userStatus}",
-                type: 'get',
-                data: "",
-                contentType: false,
-                processData: false,
-                dataType: 'json'
-            }).done(function (data) {
-                //로딩바
-                console.log(data);
+<!--<head>-->
+<!--    <script th:inline="javascript">-->
+<!--        function test() {-->
+<!--            $.ajax({-->
+<!--                url: "@{/api/userStatus}",-->
+<!--                type: 'get',-->
+<!--                data: "",-->
+<!--                contentType: false,-->
+<!--                processData: false,-->
+<!--                dataType: 'json'-->
+<!--            }).done(function (data) {-->
+<!--                //로딩바-->
+<!--                console.log(data);-->
 
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                //로딩바
-                console.log(jqXHR, textStatus, errorThrown);
-            });
-        }
-    </script>
-</head>
+<!--            }).fail(function (jqXHR, textStatus, errorThrown) {-->
+<!--                //로딩바-->
+<!--                console.log(jqXHR, textStatus, errorThrown);-->
+<!--            });-->
+<!--        }-->
+<!--    </script>-->
+<!--</head>-->
 
 <body>
 <!-- 내비게이션 바 -->
@@ -33,9 +30,9 @@
 <div class="container">
     <h2 class="container my-3">게시판</h2>
 
-<!--    <a href="javascript:test();">TEST</a>-->
+    <!--    <a href="javascript:test();">TEST</a>-->
 
-<!--    https://codepen.io/jamesbarnett/pen/kQebQO-->
+    <!--    https://codepen.io/jamesbarnett/pen/kQebQO-->
     <div class="marquee container">
         <div>
             <span>제목 옆 'New~' 아이콘은 하루가 지나면 사라집니다! 😊</span>
@@ -44,35 +41,41 @@
     </div>
 
 
-<!--    <form id="listForm"  method="get">-->
+    <!--    <form id="listForm"  method="get">-->
     <form id="listForm" name="listForm" method="post">
-        <input type="hidden" id="pageNum" name="pageNum">
+        <!--        <input type="hidden" id="pageNum" name="pageNum">-->
         <div class="container my-3">
             <table class="table">
                 <thead class="table-danger">
                 <tr>
                     <th>ID</th>
-                    <th>WRITER</th>
+                    <!--                    <th>WRITER</th>-->
                     <th>TITLE</th>
                     <th>time</th>
-                    <th>hits</th>
+                    <!--                    <th>hits</th>-->
                 </tr>
                 </thead>
                 <tbody>
 
                 <table>
-                    <tr th:each="item, status : ${board}">
-                        <td th:text="${item.b_no}"></td>
-                        <td th:text="${item.b_writer}"></td>
-
+                    <!--                    <tr th:each="item, status : ${board}">-->
+                    <tr th:each="item : ${board}">
+                        <td th:text="${item.id}"></td>
                         <td>
-                            <a th:href="@{/page/{b_no}(b_no=${item.b_no})}" th:text="${item.b_title}"></a>
-                            [<span th:text="${item.commentcount}"></span>]
-                            <img th:if="${item.created_date >= nowday}" th:src="@{/images/new.png}" alt=""/>
+                            <a th:href="@{/board/page/{id}(id=${item.id})}" th:text="${item.title}"></a>
+<!--                            [<span th:text="${item.commentcount}"></span>]-->
+<!--                            <img th:if="${item.reatedDate() >= nowday}" th:src="@{/images/new.png}" alt=""/> // 새글 아이콘-->
                         </td>
 
-                        <td th:text="${#dates.format(item.REG_DT, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:text="${item.b_hits}"></td>
+                        <!--&lt;!&ndash;                        <td th:text="${item.b_writer}"></td>&ndash;&gt;-->
+
+                        <td th:text="${#dates.format(item.createdDate(), 'yyyy-MM-dd HH:mm:ss')}"></td>
+
+
+
+                        <!--                        <td th:text="${item.b_hits}"></td>-->
+
+
                     </tr>
                 </table>
 
@@ -82,87 +85,86 @@
         </div>
 
 
-<!--        페이지네이션-->
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
+        <!--        페이지네이션-->
+        <!--        <nav aria-label="Page navigation example">-->
+        <!--            <ul class="pagination justify-content-center">-->
 
 
-                <li class="page-item pre">
-                    <a class="page-link" href="javascript:fnPageClick(${pageNum-1});" aria-label="Previous">
-                        <span aria-hidden="true">≪</span>
-                    </a>
-                </li>
+        <!--                <li class="page-item pre">-->
+        <!--                    <a class="page-link" href="javascript:fnPageClick(${pageNum-1});" aria-label="Previous">-->
+        <!--                        <span aria-hidden="true">≪</span>-->
+        <!--                    </a>-->
+        <!--                </li>-->
 
-                <c:forEach begin="1" end="${pages}" var="x">
+        <!--                <c:forEach begin="1" end="${pages}" var="x">-->
 
-                    <li class="page-item">
-                        <a class="page-link" id="${x}" href="javascript:fnPageClick(${x });">${x }</a>
-                    </li>
+        <!--                    <li class="page-item">-->
+        <!--                        <a class="page-link" id="${x}" href="javascript:fnPageClick(${x });">${x }</a>-->
+        <!--                    </li>-->
 
-                </c:forEach>
-
-
-<!--                <%&#45;&#45;                <li class="page-item">&#45;&#45;%>
-                <%&#45;&#45;                    <c:forEach begin="1" end="${pages }" var="x">&#45;&#45;%>
-                <%&#45;&#45;                    <a class="page-link" id="${x}" href="javascript:fnPageClick(${x });">${x }</a>&#45;&#45;%>
-                <%&#45;&#45;                </li>&#45;&#45;%>
-                <%&#45;&#45;                    </c:forEach>&#45;&#45;%>
+        <!--                </c:forEach>-->
 
 
-                <%&#45;&#45;                    <a class="page-link" href="#">1</a></li>&#45;&#45;%>-->
+        <!--                <%&#45;&#45;                <li class="page-item">&#45;&#45;%>
+                        <%&#45;&#45;                    <c:forEach begin="1" end="${pages }" var="x">&#45;&#45;%>
+                        <%&#45;&#45;                    <a class="page-link" id="${x}" href="javascript:fnPageClick(${x });">${x }</a>&#45;&#45;%>
+                        <%&#45;&#45;                </li>&#45;&#45;%>
+                        <%&#45;&#45;                    </c:forEach>&#45;&#45;%>
 
-                <li class="page-item next">
-                    <a class="page-link" href="javascript:fnPageClick(${pageNum+1} )" aria-label="Next">
-                        <sapn aria-hidden="true">≫</sapn>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+
+                        <%&#45;&#45;                    <a class="page-link" href="#">1</a></li>&#45;&#45;%>-->
+
+        <!--                <li class="page-item next">-->
+        <!--                    <a class="page-link" href="javascript:fnPageClick(${pageNum+1} )" aria-label="Next">-->
+        <!--                        <sapn aria-hidden="true">≫</sapn>-->
+        <!--                    </a>-->
+        <!--                </li>-->
+        <!--            </ul>-->
+        <!--        </nav>-->
 
     </form>
 </div>
 
 
-<script>
+<!--<script>-->
 
-    // 페이징 처리
-    function fnPageClick(num) {
-
-
-        let newImage = document.querySelector("#imgIcon");
-
-        if (num)
-
-            $('#pageNum').val(num);
-
-        console.log(num)
-        if (num < 1) {
-            let elements = document.getElementsByClassName('pre');
-            for (let i = 0; i < elements.length; i++) {
-                elements[i].classList.add('disabled');
-            }
-            return;
-        }
-
-        <c:set value="${pages}" var="pages" />
-
-        if (num > ${pages}) {
-
-            console.log(num);
-            let elements = document.getElementsByClassName('next');
-            for (let i = 0; i < elements.length; i++) {
-                elements[i].classList.add('disabled');
-            }
-            return;
-        }
-
-        $('#listForm').attr("action", "<c:url value='/page/noticeList'/>").submit();
-
-    }
+<!--    // 페이징 처리-->
+<!--    function fnPageClick(num) {-->
 
 
-</script>
+<!--        let newImage = document.querySelector("#imgIcon");-->
 
+<!--        if (num)-->
+
+<!--            $('#pageNum').val(num);-->
+
+<!--        console.log(num)-->
+<!--        if (num < 1) {-->
+<!--            let elements = document.getElementsByClassName('pre');-->
+<!--            for (let i = 0; i < elements.length; i++) {-->
+<!--                elements[i].classList.add('disabled');-->
+<!--            }-->
+<!--            return;-->
+<!--        }-->
+
+<!--        <c:set value="${pages}" var="pages" />-->
+
+<!--        if (num > ${pages}) {-->
+
+<!--            console.log(num);-->
+<!--            let elements = document.getElementsByClassName('next');-->
+<!--            for (let i = 0; i < elements.length; i++) {-->
+<!--                elements[i].classList.add('disabled');-->
+<!--            }-->
+<!--            return;-->
+<!--        }-->
+
+<!--        $('#listForm').attr("action", "<c:url value='/page/noticeList'/>").submit();-->
+
+<!--    }-->
+
+
+<!--</script>-->
 
 
 </body>

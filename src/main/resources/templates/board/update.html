@@ -1,11 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: devjenny
-  Date: 2023-06-16
-  Time: 오후 4:37
-  To change this template use File | Settings | File Templates.
---%>
-
 <html>
 
 <!-- 공통 head -->
@@ -19,61 +11,58 @@
 <div class="container">
     <h2 class="my-3 border-bottom pb-2">업데이트</h2>
 
-    <form id="listForm" name="listForm" method="post">
-        <c:forEach var="board" items="${updateBoard}" varStatus="status">
+    <form id="listForm" name="listForm" method="post" th:action="@{/board/page/update}">
+            <div th:each="item : ${board}">
 
 
             <div class="mb-3">
-                <label for="b_no" class="form-label">번호</label>
-                <input type="text" name="b_no" id="b_no" value="${board.b_no}" class="form-control" disabled>
-                <input type="hidden" name="b_no" value="${board.b_no}">
+                <label for="id" class="form-label">번호</label>
+                <input type="text" name="id" id="id" th:value="${item.id}" class="form-control" disabled>
+<!--                <input type="hidden" name="id" th:value="${item.id}">-->
             </div>
-            <div class="mb-3">
-                <label for="b_writer" class="form-label">작성자</label>
-                <input type="text" name="b_writer" id="b_writer" class="form-control" value="${board.b_writer}"
-                       disabled>
-                <input type="hidden" name="b_writer" value="${board.b_writer}">
-            </div>
-            <div class="mb-3">
-                <label for="b_password" class="form-label">비밀번호 입력</label>
-                <input type="password" name="b_password" id="b_password"  class="form-control">
+<!--            <div class="mb-3">-->
+<!--                <label for="b_writer" class="form-label">작성자</label>-->
+<!--                <input type="text" name="b_writer" id="b_writer" class="form-control" value="${board.b_writer}"-->
+<!--                       disabled>-->
+<!--                <input type="hidden" name="b_writer" value="${board.b_writer}">-->
+<!--            </div>-->
 
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" name="title" id="title" th:value="${item.title}" class="form-control">
             </div>
             <div class="mb-3">
-                <label for="b_title" class="form-label">제목</label>
-                <input type="text" name="b_title" id="b_title" value="${board.b_title}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label for="b_contents" class="form-label">내용</label>
-                <textarea type="text" name="b_contents" id="b_contents" class="form-control"
-                          rows="10">${board.b_contents}</textarea>
+                <label for="content" class="form-label">내용</label>
+                <textarea type="text" name="content" id="content" class="form-control"
+                          rows="10" th:text="${item.content}"></textarea>
             </div>
 
 
-        </c:forEach>
-        <%-- 버튼 --%>
-        <input type="button" class="btn btn-primary" value="수정" onclick="fnUpdateBtn()">
-        <a href="/guide/page/noticeList" class="btn btn-danger">취소</a>
+            </div>
+<!--         버튼 -->
+        <input type="submit" class="btn btn-primary" value="수정">
+<!--        <input type="button" class="btn btn-primary" value="수정" onclick="fnUpdateBtn()">-->
+        <a href="/board/page/noticeList" class="btn btn-danger">취소</a>
     </form>
 </div>
 
 
-<script>
-    function fnUpdateBtn() {
+<!--<script>-->
+<!--    function fnUpdateBtn() {-->
 
-        <c:forEach var="board" items="${updateBoard}" varStatus="status">
-        const confirmPass = ${board.b_password}
-        const inputPass = document.querySelector("#b_password").value;
+<!--        <c:forEach var="board" items="${updateBoard}" varStatus="status">-->
+<!--        const confirmPass = ${board.b_password}-->
+<!--        const inputPass = document.querySelector("#b_password").value;-->
 
-        if (confirmPass == inputPass) {
-            confirm("수정하시겠습니까?");
-            $('#listForm').attr("action", "<c:url value='/page/update'/>").submit();
-        } else {
-            alert("비밀번호가 일치하지 않습니다!")
-        }
-        </c:forEach>
+<!--        if (confirmPass == inputPass) {-->
+<!--            confirm("수정하시겠습니까?");-->
+<!--            $('#listForm').attr("action", "<c:url value='/page/update'/>").submit();-->
+<!--        } else {-->
+<!--            alert("비밀번호가 일치하지 않습니다!")-->
+<!--        }-->
+<!--        </c:forEach>-->
 
-    }
-</script>
+<!--    }-->
+<!--</script>-->
 </body>
 </html>

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -68,9 +67,8 @@ public class BoardService {
     }
 
 
-    public int delete(Long id) {
-//        return noticeMapper.delete(id);
-        return 1;
+    public void deleteBoard(Long id) {
+        boardRepository.deleteById(id);
     }
 
     public void hits(Long id) {

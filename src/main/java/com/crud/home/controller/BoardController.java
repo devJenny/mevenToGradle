@@ -96,42 +96,36 @@ public class BoardController {
 
 //        boardService.countComment(id);
 
-
         return "board/detail";
     }
 
 
     @Comment("수정")
     @GetMapping("/page/update/{id}")
-    public String boardUpdate(@PathVariable Long id, Model model) {
-//        List<Map<String, Object>> result = boardService.findById(id);
-//        model.addAttribute("updateBoard", result);
-//        log.info("result" + result);
+    public String boardUpdate(@PathVariable("id") Long id, Model model) {
+
+        Board result = boardService.findById(id);
+        log.info("상세페이지" + result);
+        model.addAttribute("board", result);
 
         return "board/update";
     }
 
+    @Comment("게시물 업데이트")
     @PostMapping("/page/update")
-    public String boardUpdate(@RequestParam Map<String, Object> param, Model model) {
+    public String boardUpdate(BoardReqDto dto, Model model) {
 
-        boardService.updateBoard(param);
-//        log.info("업데이트" + param);
-        Long num = Long.parseLong((String) param.get("b_no"));
-//        List<Map<String, Object>> result = boardService.findById(num);
+        Board result = boardService.updateBoard(dto);
+        model.addAttribute("board", result);
 
-//        model.addAttribute("board", result);
-
-//        return "redirect:/page/"+param.get("b_no");
         return "board/detail";
     }
 
-
     @Comment("게시물 삭제")
-    @DeleteMapping("/page/{id}")
-    public String boardDelete(@PathVariable Long id) {
-        boardService.delete(id);
-//        log.info("게시물 삭제" + id);
-        return "redirect:/";
+    @GetMapping("/page/delete/{id}")
+    public String boardDelete(@PathVariable("id") Long id) {
+        boardService.deleteBoard(id);
+        return "redirect:/board/";
     }
 
     @Comment("Ajax 요청")

@@ -69,12 +69,9 @@
 
                         <!--&lt;!&ndash;                        <td th:text="${item.b_writer}"></td>&ndash;&gt;-->
 
-                        <td th:text="${#dates.format(item.createdDate(), 'yyyy-MM-dd HH:mm:ss')}"></td>
-
-
+                        <td th:text="${#temporals.format(item.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
 
                         <!--                        <td th:text="${item.b_hits}"></td>-->
-
 
                     </tr>
                 </table>
@@ -125,7 +122,6 @@
     </form>
 </div>
 
-
 <!--<script>-->
 
 <!--    // 페이징 처리-->
@@ -165,7 +161,6 @@
 
 
 <!--</script>-->
-
 
 </body>
 </html>

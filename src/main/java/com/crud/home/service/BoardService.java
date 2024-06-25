@@ -47,14 +47,17 @@ public class BoardService {
 
     @Comment("id 조회")
     public Board findById(Long id) {
+
         Optional<Board> byId = boardRepository.findById(id);
         Board board = byId.orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다"));
 
         return board;
+
     }
 
     @Comment("게시물 수정")
     public Board updateBoard(BoardReqDto dto) {
+
         Board board = boardMapper.toEntity(dto);
         Long memberId = 1L;
 
@@ -64,9 +67,10 @@ public class BoardService {
         Board save = boardRepository.save(board);
 
         return save;
+
     }
 
-
+    @Comment("게시물 사제")
     public void deleteBoard(Long id) {
         boardRepository.deleteById(id);
     }

@@ -32,7 +32,10 @@ public class BoardController {
     @Comment("게시판 메인")
 //    @RequestMapping(value = {"/board","/"}, method = {RequestMethod.GET, RequestMethod.POST})
     @GetMapping("/")
-    public String board(BoardReqDto dto, Model model) throws Exception {
+    public String board(Model model) throws Exception {
+
+        List<Board> result = boardService.findByAll();
+        model.addAttribute("board", result);
 
 //        log.info("상세페이지1" + param);
         int pageNum = 0;
@@ -49,18 +52,16 @@ public class BoardController {
 //        notice = noticeService.selectNoticeList(param);
 //        log.info("상세페이지2" + notice);
 
-        List<Board> byAll = boardService.findByAll();
-        model.addAttribute("board", byAll);
 //        model.addAttribute("pageNum", notice.getPageNum());
 //        model.addAttribute("total", notice.getTotal());
 //        model.addAttribute("pages", notice.getPages());
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, -1); //7일간 보이도록 하기위해서.
-        String nowday = format.format(cal.getTime());
-
-        model.addAttribute("nowday", nowday);
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.DAY_OF_MONTH, -1); //7일간 보이도록 하기위해서.
+//        String nowday = format.format(cal.getTime());
+//
+//        model.addAttribute("nowday", nowday);
 
         return "board/main";
     }

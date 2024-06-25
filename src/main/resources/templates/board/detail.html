@@ -51,7 +51,7 @@
 
 <!--             버튼 -->
             <a th:href="@{/board/}" class="btn btn-success">목록</a>
-<!--            <a href="/page/update/${board.b_no}" class="btn btn-primary">수정</a>-->
+            <a th:href="@{/board/page/update/{id}(id=${item.id})}" class="btn btn-primary">수정</a>
 <!--            <input type="button" onclick="fnDeleteBtn()" class="btn btn-danger" value="삭제">-->
 
         </div>

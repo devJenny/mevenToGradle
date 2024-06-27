@@ -1,0 +1,27 @@
+<!-- 공통 head -->
+<th:block th:replace="~{fragments/head :: common-head}"></th:block>
+
+<body>
+
+<!-- 내비게이션 바 -->
+<th:block th:replace="~{fragments/nav :: common-nav}"></th:block>
+
+<div class="container w-50">
+    <h2 class="my-3 border-bottom pb-2">로그인</h2>
+    <form name="loginForm" id="loginForm" method="post" th:action="@{/auth/login}">
+        <div class="form-group">
+            <input type="text" class="form-control my-3" placeholder="아이디" name="username" maxlength="20" required>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control my-3" placeholder="비밀번호" name="password" maxlength="20" required>
+        </div>
+
+        <!--        <%&#45;&#45; <input type="button" onclick="fnLoginBtn()" class="btn btn-primary form-control" value="로그인">&#45;&#45;%>-->
+        <!--        <button type="submit" id="loginBtn" class="btn btn-primary form-control">로그인</button>-->
+        <button type="submit" class="btn btn-primary form-control">로그인</button>
+        <br><br>
+    </form>
+    <a href="/auth/join" class="btn btn-primary form-control">회원가입</a>
+</div>
+</body>
+</html>

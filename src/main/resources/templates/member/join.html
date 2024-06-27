@@ -1,0 +1,44 @@
+<!-- 공통 head -->
+<th:block th:replace="~{fragments/head :: common-head}"></th:block>
+
+<body>
+
+<!-- 내비게이션 바 -->
+<th:block th:replace="~{fragments/nav :: common-nav}"></th:block>
+
+<div class="container w-50">
+      <form name="joinForm" id="joinForm" method="post" th:action="@{/auth/join}">
+        <h2 class="my-3 border-bottom pb-2">회원가입</h2>
+        <div class="form-group">
+          <input type="text" class="form-control my-3" placeholder="아이디" name="username" maxlength="20" required>
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control my-3" placeholder="비밀번호" id="password" name="password" maxlength="20" required>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control my-3" placeholder="이름" name="name" maxlength="20" required>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control my-3" placeholder="전화번호" name="phoneNumber" maxlength="20" required>
+        </div>
+        <div class="form-group">
+          <input type="email" class="form-control my-3" placeholder="이메일" name="email" maxlength="20" required>
+        </div>
+        <div class="form-group" style="text-align: center;">
+          <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary my-3 active">
+              <input type="radio" name="gender" autocomplete="off" value="남자" checked required>남자
+            </label>
+            <label class="btn btn-primary my-3">
+              <input type="radio" name="gender" autocomplete="off" value="여자" checked>여자
+            </label>
+          </div>
+        </div>
+
+<!--<%&#45;&#45;        <input type="button" onclick="fnJoinSubmitBtn()" class="btn btn-primary form-control" value="회원가입">&#45;&#45;%>-->
+        <input type="submit" onclick="return confirm('회원가입을 하시겠습니까?')" class="btn btn-primary form-control" value="회원가입">
+      </form>
+</div>
+
+</body>
+</html>

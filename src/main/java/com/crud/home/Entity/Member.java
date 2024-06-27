@@ -31,13 +31,13 @@ public class Member {
     private Long id;
 
     @Comment("회원 ID")
-    private String userId;
+    private String username;
 
     @Comment("비밀번호")
     private String password;
 
     @Comment("회원 이름")
-    private String userName;
+    private String name;
 
     @Comment("전화번호")
     private String phoneNumber;

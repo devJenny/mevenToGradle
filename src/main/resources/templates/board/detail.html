@@ -32,11 +32,10 @@
 <!--                <label for="b_hits" class="form-label">조회수</label>-->
 <!--                <input type="text" name="b_hits" id="b_hits" class="form-control" value="${board.b_hits}" disabled>-->
 <!--            </div>-->
-<!--            <div class="mb-3">-->
-<!--                <label for="b_writer" class="form-label">작성자</label>-->
-<!--                <input type="text" name="b_writer" id="b_writer" class="form-control" value="${board.b_writer}"-->
-<!--                       disabled>-->
-<!--            </div>-->
+            <div class="mb-3">
+                <label for="username" class="form-label">작성자</label>
+                <div type="text" name="username" id="username" class="form-control" th:text="${board.username}" disabled></div>
+            </div>
             <div class="mb-3">
                 <label for="title" class="form-label">제목</label>
                 <div type="text" name="title" id="title" class="form-control" th:text="${board.title}" disabled></div>

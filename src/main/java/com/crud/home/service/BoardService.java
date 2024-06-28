@@ -3,11 +3,14 @@ package com.crud.home.service;
 //import com.github.pagehelper.Page;
 import com.crud.home.Entity.Board;
 import com.crud.home.Repository.BoardRepository;
+import com.crud.home.Repository.MemberRepository;
+import com.crud.home.config.auth.PrincipalDetails;
 import com.crud.home.domain.BoardReqDto;
 import com.crud.home.mapper.BoardMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +24,17 @@ import java.util.Optional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
     private final BoardMapper boardMapper = BoardMapper.INSTANCE;
 
-    @Comment("게시글 저장")
-    public Board insertBoard(BoardReqDto dto) {
+    @Comment("게시글 등록")
+    public Board insertBoard(BoardReqDto dto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         Board board = boardMapper.toEntity(dto);
-        Long memberId = 1L;
+        Long memberId = principalDetails.getMember().getId();
+        log.info("memberId: {}", memberId);
 
-        board.setMemberId(memberId);
+        board.setMemberId(null);
         board.setHits(2L);
 
         Board save = boardRepository.save(board);
@@ -56,12 +61,12 @@ public class BoardService {
     }
 
     @Comment("게시물 수정")
-    public Board updateBoard(BoardReqDto dto) {
+    public Board updateBoard(BoardReqDto dto, PrincipalDetails principalDetails) {
 
         Board board = boardMapper.toEntity(dto);
         Long memberId = 1L;
 
-        board.setMemberId(memberId);
+//        board.setMemberId(memberId);
         board.setHits(2L);
 
         Board save = boardRepository.save(board);

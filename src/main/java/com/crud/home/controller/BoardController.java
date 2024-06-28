@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.crud.home.Entity.Board;
+import com.crud.home.Entity.Member;
+import com.crud.home.config.auth.PrincipalDetails;
 import com.crud.home.domain.BoardReqDto;
 import com.crud.home.service.CommentService;
 import com.crud.home.service.BoardService;
@@ -14,10 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 
 @RequiredArgsConstructor
 @Controller
@@ -37,7 +39,6 @@ public class BoardController {
         List<Board> result = boardService.findByAll();
         model.addAttribute("board", result);
 
-//        log.info("상세페이지1" + param);
         int pageNum = 0;
 
 //        if (param.get("pageNum") != null) {
@@ -46,22 +47,22 @@ public class BoardController {
 
         int pageSize = 10;
         String orderBy = "b_no DESC";
-//        Page<List<Map<String, Object>>> notice = new Page<>();
-//        PageHelper.startPage(pageNum, pageSize, orderBy);
-//
-//        notice = noticeService.selectNoticeList(param);
-//        log.info("상세페이지2" + notice);
+/*        Page<List<Map<String, Object>>> notice = new Page<>();
+        PageHelper.startPage(pageNum, pageSize, orderBy);
 
-//        model.addAttribute("pageNum", notice.getPageNum());
-//        model.addAttribute("total", notice.getTotal());
-//        model.addAttribute("pages", notice.getPages());
+        notice = noticeService.selectNoticeList(param);
+        log.info("상세페이지2" + notice);
 
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//        Calendar cal = Calendar.getInstance();
-//        cal.add(Calendar.DAY_OF_MONTH, -1); //7일간 보이도록 하기위해서.
-//        String nowday = format.format(cal.getTime());
-//
-//        model.addAttribute("nowday", nowday);
+        model.addAttribute("pageNum", notice.getPageNum());
+        model.addAttribute("total", notice.getTotal());
+        model.addAttribute("pages", notice.getPages());
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, -1); //7일간 보이도록 하기위해서.
+        String nowday = format.format(cal.getTime());
+
+        model.addAttribute("nowday", nowday);*/
 
         return "board/main";
     }
@@ -74,11 +75,16 @@ public class BoardController {
 
     @Comment("게시물 등록")
     @PostMapping("/page")
-    public String boardCreate(BoardReqDto dto, Model model) {
+    public String boardCreate(BoardReqDto dto, @AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
 
-        Board board = boardService.insertBoard(dto);
+        Board board = boardService.insertBoard(dto, principalDetails);
+        Long memberId = principalDetails.getMember().getId();
+        Member member = principalDetails.getMember();
+        model.addAttribute("memberId", memberId);
+
+        log.info("memberId: {}", memberId);
+        log.info("membereeeee: {}", member);
         log.info("게시물등록 : {}" + board);
-        model.addAttribute("글쓰기", board);
 
         return "redirect:/board/";
     }
@@ -88,18 +94,17 @@ public class BoardController {
     public String boardDetail(@PathVariable("id") Long id, Model model)  {
 //        boardService.hits(id);
         Board result = boardService.findById(id);
-        log.info("상세페이지" + result);
+        log.info("상세페이지 : {}" + result);
         model.addAttribute("board", result);
 
-//        // 댓글 조회
-//        List<Map<String, Object>> comment = commentService.commentList(id);
-//        model.addAttribute("comment", comment);
+/*        // 댓글 조회
+        List<Map<String, Object>> comment = commentService.commentList(id);
+        model.addAttribute("comment", comment);
 
-//        boardService.countComment(id);
+        boardService.countComment(id);*/
 
         return "board/detail";
     }
-
 
     @Comment("수정")
     @GetMapping("/page/update/{id}")
@@ -114,9 +119,9 @@ public class BoardController {
 
     @Comment("게시물 업데이트")
     @PostMapping("/page/update")
-    public String boardUpdate(BoardReqDto dto, Model model) {
+    public String boardUpdate(BoardReqDto dto, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        Board result = boardService.updateBoard(dto);
+        Board result = boardService.updateBoard(dto, principalDetails);
         model.addAttribute("board", result);
 
         return "board/detail";

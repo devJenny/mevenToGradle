@@ -21,9 +21,9 @@ public class Board {
     private Long id;
 
     @Comment("회원 ID")
-//    @ManyToOne
-//    @JoinColumn(name = "memberId")
-    private Long memberId; // join 예정
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberId")
+    private Member memberId; // join 예정
 
     @Comment("제목")
     private String title;

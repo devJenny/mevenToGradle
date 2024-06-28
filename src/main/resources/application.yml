@@ -76,4 +76,5 @@ logging:
     root: info
     org.springgramework.web: error
     org.springframework.web.filter.CommonsRequestLoggingFilter: error
+#    org.springframework.security: trace
     #com.klcube.soda.mapper.CommonMapper : debug

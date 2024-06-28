@@ -23,6 +23,8 @@
     <form id="listForm" name="listForm" action="post">
         <!--        <c:forEach var="board" items="${board}" varStatus="status">-->
         <div th:each="item : ${board}">
+<!--            <div type="hidden" name="memberId" th:text="${#authentication.principal.member.id}">-->
+            <input type="hidden" name="memberId" th:value="${item.memberId}">
 
 <!--            <%&#45;&#45;            <div class="mb-3">&#45;&#45;%>-->
 <!--            <%&#45;&#45;                <label for="b_no" class="form-label">번호</label>&#45;&#45;%>-->
@@ -33,17 +35,17 @@
 <!--                <input type="text" name="b_hits" id="b_hits" class="form-control" value="${board.b_hits}" disabled>-->
 <!--            </div>-->
             <div class="mb-3">
-                <label for="username" class="form-label">작성자</label>
-                <div type="text" name="username" id="username" class="form-control" th:text="${board.username}" disabled></div>
+                <label for="memberId" class="form-label">작성자</label>
+                <div type="text" name="memberId" id="memberId" class="form-control" th:text="${item.memberId}" disabled></div>
             </div>
             <div class="mb-3">
                 <label for="title" class="form-label">제목</label>
-                <div type="text" name="title" id="title" class="form-control" th:text="${board.title}" disabled></div>
+                <div type="text" name="title" id="title" class="form-control" th:text="${item.title}" disabled></div>
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">내용</label>
                 <textarea type="text" name="content" id="content" class="form-control" rows="10"
-                          th:text="${board.content}" disabled></textarea>
+                          th:text="${item.content}" disabled></textarea>
             </div>
 
             <!--             버튼 -->
@@ -51,7 +53,7 @@
             <a th:href="@{/board/page/update/{id}(id=${item.id})}" class="btn btn-primary">수정</a>
             <input type="button" onclick="fnDeleteBtn()" class="btn btn-danger" value="삭제">
 
-        </div>
+        </input>
     </form>
 </div>
 

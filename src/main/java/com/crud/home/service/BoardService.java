@@ -2,6 +2,7 @@ package com.crud.home.service;
 
 //import com.github.pagehelper.Page;
 import com.crud.home.Entity.Board;
+import com.crud.home.Entity.Member;
 import com.crud.home.Repository.BoardRepository;
 import com.crud.home.Repository.MemberRepository;
 import com.crud.home.config.auth.PrincipalDetails;
@@ -32,9 +33,13 @@ public class BoardService {
 
         Board board = boardMapper.toEntity(dto);
         Long memberId = principalDetails.getMember().getId();
-        log.info("memberId: {}", memberId);
+        log.info("로그인 memberId: {}, 인증회원 정보 조회 : {}", memberId,principalDetails.getUsername());
 
-        board.setMemberId(null);
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Not Found Member"));
+        Long repoMemberId = member.getId();
+        log.info("### member: {}", repoMemberId);
+
+        board.setMemberId(repoMemberId);
         board.setHits(2L);
 
         Board save = boardRepository.save(board);

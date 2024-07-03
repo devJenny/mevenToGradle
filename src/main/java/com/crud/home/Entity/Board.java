@@ -1,10 +1,7 @@
 package com.crud.home.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -21,9 +18,9 @@ public class Board {
     private Long id;
 
     @Comment("회원 ID")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
-    private Member memberId; // join 예정
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "member_id")
+    private Long memberId;
 
     @Comment("제목")
     private String title;
@@ -44,5 +41,4 @@ public class Board {
     public void createdDate() {
         this.createdDate = LocalDateTime.now();
     }
-
 }

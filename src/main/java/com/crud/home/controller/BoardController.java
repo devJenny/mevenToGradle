@@ -79,11 +79,8 @@ public class BoardController {
 
         Board board = boardService.insertBoard(dto, principalDetails);
         Long memberId = principalDetails.getMember().getId();
-        Member member = principalDetails.getMember();
         model.addAttribute("memberId", memberId);
 
-        log.info("memberId: {}", memberId);
-        log.info("membereeeee: {}", member);
         log.info("게시물등록 : {}" + board);
 
         return "redirect:/board/";

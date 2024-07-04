@@ -1,19 +1,17 @@
 package com.crud.home.controller;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.crud.home.Entity.Board;
-import com.crud.home.Entity.Member;
 import com.crud.home.config.auth.PrincipalDetails;
 import com.crud.home.domain.BoardReqDto;
 import com.crud.home.service.CommentService;
 import com.crud.home.service.BoardService;
-//import com.github.pagehelper.Page;
-//import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,37 +30,16 @@ public class BoardController {
     private final CommentService commentService;
 
     @Comment("게시판 메인")
-//    @RequestMapping(value = {"/board","/"}, method = {RequestMethod.GET, RequestMethod.POST})
     @GetMapping("/")
-    public String board(Model model) throws Exception {
+    public String board(Model model, @RequestParam(name="page", defaultValue = "0") int page,
+                        @RequestParam(name="size", defaultValue = "10") int size) {
 
-        List<Board> result = boardService.findByAll();
-        model.addAttribute("board", result);
+        Page<Board> mainPagination = boardService.getMainPagination(page, size);
 
-        int pageNum = 0;
-
-//        if (param.get("pageNum") != null) {
-//            pageNum = Integer.parseInt((String) param.get("pageNum"));
-//        }
-
-        int pageSize = 10;
-        String orderBy = "b_no DESC";
-/*        Page<List<Map<String, Object>>> notice = new Page<>();
-        PageHelper.startPage(pageNum, pageSize, orderBy);
-
-        notice = noticeService.selectNoticeList(param);
-        log.info("상세페이지2" + notice);
-
-        model.addAttribute("pageNum", notice.getPageNum());
-        model.addAttribute("total", notice.getTotal());
-        model.addAttribute("pages", notice.getPages());
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, -1); //7일간 보이도록 하기위해서.
-        String nowday = format.format(cal.getTime());
-
-        model.addAttribute("nowday", nowday);*/
+        model.addAttribute("board", mainPagination);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", mainPagination.getTotalPages());
+        model.addAttribute("nowday", LocalDateTime.now());
 
         return "board/main";
     }
@@ -88,16 +65,16 @@ public class BoardController {
 
     @Comment("상세 페이지")
     @GetMapping("/page/{id}")
-    public String boardDetail(@PathVariable("id") Long id, Model model)  {
-//        boardService.hits(id);
+    public String boardDetail(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails)  {
+        boardService.hits(id);
         Board result = boardService.findById(id);
         log.info("상세페이지 : {}" + result);
         model.addAttribute("board", result);
+        model.addAttribute("username", principalDetails.getMember().getId());
 
 /*        // 댓글 조회
         List<Map<String, Object>> comment = commentService.commentList(id);
         model.addAttribute("comment", comment);
-
         boardService.countComment(id);*/
 
         return "board/detail";
@@ -115,13 +92,14 @@ public class BoardController {
     }
 
     @Comment("게시물 업데이트")
-    @PostMapping("/page/update")
-    public String boardUpdate(BoardReqDto dto, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    @PostMapping("/page/update/{id}")
+    public String boardUpdate(@PathVariable("id") Long id, BoardReqDto dto, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        Board result = boardService.updateBoard(dto, principalDetails);
+        Board result = boardService.updateBoard(id, dto, principalDetails);
         model.addAttribute("board", result);
 
-        return "board/detail";
+//        return "board/detail";
+        return "redirect:/board/page/" + id;
     }
 
     @Comment("게시물 삭제")

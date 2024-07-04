@@ -40,127 +40,65 @@
         </div>
     </div>
 
-
-    <!--    <form id="listForm"  method="get">-->
     <form id="listForm" name="listForm" method="post">
-        <!--        <input type="hidden" id="pageNum" name="pageNum">-->
+
         <div class="container my-3">
             <table class="table">
                 <thead class="table-danger">
                 <tr>
                     <th>ID</th>
-                    <!--                    <th>WRITER</th>-->
                     <th>TITLE</th>
+                    <th>WRITER</th>
                     <th>time</th>
-                    <!--                    <th>hits</th>-->
+                    <th>hits</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                <table>
-                    <!--                    <tr th:each="item, status : ${board}">-->
-                    <tr th:each="item : ${board}">
-                        <td th:text="${item.id}"></td>
-                        <td>
-                            <a th:href="@{/board/page/{id}(id=${item.id})}" th:text="${item.title}"></a>
-<!--                            [<span th:text="${item.commentcount}"></span>]-->
-<!--                            <img th:if="${item.reatedDate() >= nowday}" th:src="@{/images/new.png}" alt=""/> // 새글 아이콘-->
-                        </td>
+                <tr th:each="item : ${board}">
+                    <td th:text="${item.id}"></td>
+                    <td>
+                        <a th:href="@{/board/page/{id}(id=${item.id})}" th:text="${item.title}"></a>
+<!--                        [<span th:text="${item.commentcount}"></span>]-->
+<!--                        <img th:if="${item.createdDate.isAfter(nowday.minusDays(1))}" th:src="@{/images/new.png}" alt="New"/>-->
+                    </td>
+                    <td th:text="${item.memberId}"></td>
 
-                        <!--&lt;!&ndash;                        <td th:text="${item.b_writer}"></td>&ndash;&gt;-->
 
-                        <td th:text="${#temporals.format(item.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${#temporals.format(item.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
 
-                        <!--                        <td th:text="${item.b_hits}"></td>-->
+                    <td th:text="${item.hits}"></td>
 
-                    </tr>
-                </table>
+                </tr>
 
                 </tbody>
             </table>
             <a th:href="@{/board/page}" class="btn btn-primary">글쓰기</a>
         </div>
 
-
-        <!--        페이지네이션-->
-        <!--        <nav aria-label="Page navigation example">-->
-        <!--            <ul class="pagination justify-content-center">-->
-
-
-        <!--                <li class="page-item pre">-->
-        <!--                    <a class="page-link" href="javascript:fnPageClick(${pageNum-1});" aria-label="Previous">-->
-        <!--                        <span aria-hidden="true">≪</span>-->
-        <!--                    </a>-->
-        <!--                </li>-->
-
-        <!--                <c:forEach begin="1" end="${pages}" var="x">-->
-
-        <!--                    <li class="page-item">-->
-        <!--                        <a class="page-link" id="${x}" href="javascript:fnPageClick(${x });">${x }</a>-->
-        <!--                    </li>-->
-
-        <!--                </c:forEach>-->
-
-
-        <!--                <%&#45;&#45;                <li class="page-item">&#45;&#45;%>
-                        <%&#45;&#45;                    <c:forEach begin="1" end="${pages }" var="x">&#45;&#45;%>
-                        <%&#45;&#45;                    <a class="page-link" id="${x}" href="javascript:fnPageClick(${x });">${x }</a>&#45;&#45;%>
-                        <%&#45;&#45;                </li>&#45;&#45;%>
-                        <%&#45;&#45;                    </c:forEach>&#45;&#45;%>
-
-
-                        <%&#45;&#45;                    <a class="page-link" href="#">1</a></li>&#45;&#45;%>-->
-
-        <!--                <li class="page-item next">-->
-        <!--                    <a class="page-link" href="javascript:fnPageClick(${pageNum+1} )" aria-label="Next">-->
-        <!--                        <sapn aria-hidden="true">≫</sapn>-->
-        <!--                    </a>-->
-        <!--                </li>-->
-        <!--            </ul>-->
-        <!--        </nav>-->
+        <!-- 페이지네이션 -->
+        <div th:if="${totalPages > 1}">
+            <ul class="pagination">
+                <li th:class="${currentPage == 0} ? 'disabled' : ''">
+                    <a th:href="@{/board/(page=0, size=${size})}">First</a>
+                </li>
+                <li th:class="${currentPage == 0} ? 'disabled' : ''">
+                    <a th:href="@{/board/(page=${currentPage - 1}, size=${size})}">Previous</a>
+                </li>
+                <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:class="${pageNum == currentPage} ? 'active' : ''">
+                    <a th:href="@{/board/(page=${pageNum}, size=${size})}" th:text="${pageNum + 1}">1</a>
+                </li>
+                <li th:class="${currentPage == totalPages - 1} ? 'disabled' : ''">
+                    <a th:href="@{/board/(page=${currentPage + 1}, size=${size})}">Next</a>
+                </li>
+                <li th:class="${currentPage == totalPages - 1} ? 'disabled' : ''">
+                    <a th:href="@{/board/(page=${totalPages - 1}, size=${size})}">Last</a>
+                </li>
+            </ul>
+        </div>
 
     </form>
 </div>
-
-<!--<script>-->
-
-<!--    // 페이징 처리-->
-<!--    function fnPageClick(num) {-->
-
-
-<!--        let newImage = document.querySelector("#imgIcon");-->
-
-<!--        if (num)-->
-
-<!--            $('#pageNum').val(num);-->
-
-<!--        console.log(num)-->
-<!--        if (num < 1) {-->
-<!--            let elements = document.getElementsByClassName('pre');-->
-<!--            for (let i = 0; i < elements.length; i++) {-->
-<!--                elements[i].classList.add('disabled');-->
-<!--            }-->
-<!--            return;-->
-<!--        }-->
-
-<!--        <c:set value="${pages}" var="pages" />-->
-
-<!--        if (num > ${pages}) {-->
-
-<!--            console.log(num);-->
-<!--            let elements = document.getElementsByClassName('next');-->
-<!--            for (let i = 0; i < elements.length; i++) {-->
-<!--                elements[i].classList.add('disabled');-->
-<!--            }-->
-<!--            return;-->
-<!--        }-->
-
-<!--        $('#listForm').attr("action", "<c:url value='/page/noticeList'/>").submit();-->
-
-<!--    }-->
-
-
-<!--</script>-->
-
 </body>
 </html>

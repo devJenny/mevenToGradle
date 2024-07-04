@@ -23,25 +23,33 @@
     <form id="listForm" name="listForm" action="post">
         <!--        <c:forEach var="board" items="${board}" varStatus="status">-->
         <div th:each="item : ${board}">
-<!--            <div type="hidden" name="memberId" th:text="${#authentication.principal.member.id}">-->
+            <!--            <div type="hidden" name="memberId" th:text="${#authentication.principal.member.id}">-->
             <input type="hidden" name="memberId" th:value="${item.memberId}">
 
-<!--            <%&#45;&#45;            <div class="mb-3">&#45;&#45;%>-->
-<!--            <%&#45;&#45;                <label for="b_no" class="form-label">번호</label>&#45;&#45;%>-->
-<!--            <%&#45;&#45;                <input type="text" name="b_no" id="b_no" value="${board.b_no}" class="form-control" disabled>&#45;&#45;%>-->
-<!--            <%&#45;&#45;            </div>&#45;&#45;%>-->
-<!--            <div class="mb-3">-->
-<!--                <label for="b_hits" class="form-label">조회수</label>-->
-<!--                <input type="text" name="b_hits" id="b_hits" class="form-control" value="${board.b_hits}" disabled>-->
-<!--            </div>-->
+
+            <div class="mb-3">
+                <label for="id" class="form-label">번호</label>
+                <div type="text" name="id" id="id" th:text="${item.id}" class="form-control"></div>
+            </div>
+
             <div class="mb-3">
                 <label for="memberId" class="form-label">작성자</label>
-                <div type="text" name="memberId" id="memberId" class="form-control" th:text="${item.memberId}" disabled></div>
+                <div type="text" name="memberId" id="memberId" class="form-control"
+                     th:text="${item.memberId}"></div>
             </div>
+
+            <div class="mb-3">
+                <label for="hits" class="form-label">조회수</label>
+                <div type="text" name="hits" id="hits" class="form-control" th:text="${item.hits}">
+                </div>
+            </div>
+
             <div class="mb-3">
                 <label for="title" class="form-label">제목</label>
-                <div type="text" name="title" id="title" class="form-control" th:text="${item.title}" disabled></div>
+                <div type="text" name="title" id="title" class="form-control" th:text="${item.title}"
+                     disabled></div>
             </div>
+
             <div class="mb-3">
                 <label for="content" class="form-label">내용</label>
                 <textarea type="text" name="content" id="content" class="form-control" rows="10"
@@ -50,10 +58,11 @@
 
             <!--             버튼 -->
             <a th:href="@{/board/}" class="btn btn-success">목록</a>
-            <a th:href="@{/board/page/update/{id}(id=${item.id})}" class="btn btn-primary">수정</a>
-            <input type="button" onclick="fnDeleteBtn()" class="btn btn-danger" value="삭제">
-
-        </input>
+            <span th:if="${username == board.getMemberId()}">
+                <a th:href="@{/board/page/update/{id}(id=${item.id})}" class="btn btn-primary">수정</a>
+                <input type="button" onclick="fnDeleteBtn()" class="btn btn-danger" value="삭제"/>
+            </span>
+        </div>
     </form>
 </div>
 
@@ -121,8 +130,6 @@
             let boardNo = [[${board.id}]];
             location.href = /*[[@{/board/page/delete/{id}(id=${board.id})}]]*/ '';
         }
-
-
     }
 
     /*]]>*/
@@ -238,7 +245,6 @@
 <!--// &lt;!&ndash;        )&ndash;&gt;-->
 <!--// &lt;!&ndash;        <%&#45;&#45;        </c:forEach>&#45;&#45;%>&ndash;&gt;-->
 <!--// &lt;!&ndash;    }&ndash;&gt;-->
-
 
 </body>
 </html>

@@ -20,7 +20,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests((authorizeRequests) -> // 인증, 인가 설정
                         authorizeRequests
-                                .requestMatchers( "/", "/board/**").authenticated()
+                                .requestMatchers(  "/board/**").authenticated()
                                 .anyRequest().permitAll()
                 )
                 .formLogin((formLogin) -> // 폼 기반 로그인 설정

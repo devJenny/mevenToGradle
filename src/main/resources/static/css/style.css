@@ -33,3 +33,32 @@ body { margin: 20px; }
     0% { left: 0; }
     100% { left: -100%; }
 }
+
+
+/* 페이지네이션 */
+ .pagination {
+     display: flex;
+     justify-content: center;
+     list-style: none;
+     padding: 0;
+ }
+.pagination li {
+    margin: 0 5px;
+    cursor: pointer;
+}
+.pagination li a {
+    text-decoration: none;
+    color: #007bff;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.pagination li.disabled a {
+    color: #ccc;
+    pointer-events: none;
+}
+.pagination li.active a {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}

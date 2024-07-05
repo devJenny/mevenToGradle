@@ -4,9 +4,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import com.crud.home.Entity.Board;
+import com.crud.home.Entity.Comments;
 import com.crud.home.config.auth.PrincipalDetails;
 import com.crud.home.domain.BoardReqDto;
-import com.crud.home.service.CommentService;
+import com.crud.home.service.CommentsService;
 import com.crud.home.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    private final CommentService commentService;
+    private final CommentsService commentsService;
 
     @Comment("게시판 메인")
     @GetMapping("/")
@@ -54,8 +55,8 @@ public class BoardController {
     @PostMapping("/page")
     public String boardCreate(BoardReqDto dto, @AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
 
-        Board board = boardService.insertBoard(dto, principalDetails);
         Long memberId = principalDetails.getMember().getId();
+        Board board = boardService.insertBoard(dto, memberId);
         model.addAttribute("memberId", memberId);
 
         log.info("게시물등록 : {}" + board);
@@ -66,16 +67,18 @@ public class BoardController {
     @Comment("상세 페이지")
     @GetMapping("/page/{id}")
     public String boardDetail(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails)  {
+
         boardService.hits(id);
         Board result = boardService.findById(id);
-        log.info("상세페이지 : {}" + result);
+        List<Comments> comments = commentsService.commentsByBoardId(id);
+
         model.addAttribute("board", result);
         model.addAttribute("username", principalDetails.getMember().getId());
+        model.addAttribute("usernickname", principalDetails.getMember().getNickname());
 
-/*        // 댓글 조회
-        List<Map<String, Object>> comment = commentService.commentList(id);
-        model.addAttribute("comment", comment);
-        boardService.countComment(id);*/
+        model.addAttribute("comments", comments);
+
+        log.info("상세페이지 : {}" + result);
 
         return "board/detail";
     }
@@ -95,7 +98,8 @@ public class BoardController {
     @PostMapping("/page/update/{id}")
     public String boardUpdate(@PathVariable("id") Long id, BoardReqDto dto, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        Board result = boardService.updateBoard(id, dto, principalDetails);
+        Long memberId = principalDetails.getMember().getId();
+        Board result = boardService.updateBoard(id, dto, memberId);
         model.addAttribute("board", result);
 
 //        return "board/detail";
@@ -111,7 +115,7 @@ public class BoardController {
 
     @Comment("Ajax 요청")
     @GetMapping(value = "/api/userStatus")
-    public ResponseEntity<List<Map<String, Object>>> userStatus() throws Exception {
+    public ResponseEntity<List<Map<String, Object>>> userStatus()  {
 
         Map<String, Object> test = new HashMap<>();
 

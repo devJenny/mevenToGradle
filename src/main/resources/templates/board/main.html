@@ -47,10 +47,10 @@
                 <thead class="table-danger">
                 <tr>
                     <th>ID</th>
-                    <th>TITLE</th>
-                    <th>WRITER</th>
-                    <th>time</th>
-                    <th>hits</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성 시간</th>
+                    <th>조회수</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,15 +60,12 @@
                     <td>
                         <a th:href="@{/board/page/{id}(id=${item.id})}" th:text="${item.title}"></a>
 <!--                        [<span th:text="${item.commentcount}"></span>]-->
+                        <!-- 새글 버튼 -->
 <!--                        <img th:if="${item.createdDate.isAfter(nowday.minusDays(1))}" th:src="@{/images/new.png}" alt="New"/>-->
                     </td>
-                    <td th:text="${item.memberId}"></td>
-
-
+                    <td th:text="${item.member.nickname}"></td>
                     <td th:text="${#temporals.format(item.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-
                     <td th:text="${item.hits}"></td>
-
                 </tr>
 
                 </tbody>

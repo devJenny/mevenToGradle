@@ -3,6 +3,7 @@ package com.crud.home.service;
 import com.crud.home.Entity.Board;
 import com.crud.home.Entity.Member;
 import com.crud.home.Repository.BoardRepository;
+import com.crud.home.Repository.CommentsRepository;
 import com.crud.home.Repository.MemberRepository;
 import com.crud.home.config.auth.PrincipalDetails;
 import com.crud.home.domain.BoardReqDto;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,19 +29,20 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final CommentsRepository commentsRepository;
     private final BoardMapper boardMapper = BoardMapper.INSTANCE;
 
     @Comment("게시글 등록")
-    public Board insertBoard(BoardReqDto dto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public Board insertBoard(BoardReqDto dto, Long memberId) {
 
         Board board = boardMapper.toEntity(dto);
-        Long memberId = principalDetails.getMember().getId();
-        log.info("로그인 memberId: {}, 인증회원 정보 조회 : {}", memberId, principalDetails.getUsername());
 
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Not Found Member"));
-        Long repoMemberId = member.getId();
+        Long confirmMemberId = member.getId();
 
-        board.setMemberId(repoMemberId);
+        System.out.println("@@@@@@@@@@@@@@@" + Member.builder().id(confirmMemberId).build());
+        board.setMember(Member.builder().id(confirmMemberId).build());
+
         board.setHits(0L);
 
         Board save = boardRepository.save(board);
@@ -51,17 +52,15 @@ public class BoardService {
 
     @Comment("게시물 수정")
     @Transactional
-    public Board updateBoard(Long id, BoardReqDto dto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public Board updateBoard(Long id, BoardReqDto dto, Long memberId) {
 
         Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid board ID: " + id));
-        Long memberId = principalDetails.getMember().getId();
-        log.info("로그인 memberId: {}, 인증회원 정보 조회 : {}", memberId, principalDetails.getUsername());
 
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Not Found Member"));
-        Long repoMemberId = member.getId();
+        Long confirmMemberId = member.getId();
 
         board.setId(board.getId());
-        board.setMemberId(repoMemberId);
+        board.setMember(Member.builder().id(confirmMemberId).build());
         board.setTitle(dto.getTitle());
         board.setContent(dto.getContent());
         board.setUpdatedDate(LocalDateTime.now());
@@ -73,7 +72,12 @@ public class BoardService {
 
     @Comment("게시물 삭제")
     public void deleteBoard(Long id) {
+        Board byId = findById(id);
+        Long id1 = byId.getId();
+
+        commentsRepository.deleteByBoardId(id1);
         boardRepository.deleteById(id);
+
     }
 
     @Comment("전체 게시글 조회")
@@ -103,7 +107,7 @@ public class BoardService {
         return boardRepository.findAll(pageRequest);
     }
 
-    public void countComment(Long id) throws Exception {
+    public void countComment(Long id) {
 //        noticeMapper.countComment(id);
     }
 

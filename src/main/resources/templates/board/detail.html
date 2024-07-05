@@ -16,16 +16,12 @@
 <!-- 내비게이션 바 -->
 <th:block th:replace="~{fragments/nav :: common-nav}"></th:block>
 
-
 <div class="container">
     <h2 class="my-3 border-bottom pb-2">게시물</h2>
 
     <form id="listForm" name="listForm" action="post">
-        <!--        <c:forEach var="board" items="${board}" varStatus="status">-->
         <div th:each="item : ${board}">
-            <!--            <div type="hidden" name="memberId" th:text="${#authentication.principal.member.id}">-->
-            <input type="hidden" name="memberId" th:value="${item.memberId}">
-
+            <input type="hidden" name="memberId" th:value="${item.member.id}">
 
             <div class="mb-3">
                 <label for="id" class="form-label">번호</label>
@@ -35,7 +31,7 @@
             <div class="mb-3">
                 <label for="memberId" class="form-label">작성자</label>
                 <div type="text" name="memberId" id="memberId" class="form-control"
-                     th:text="${item.memberId}"></div>
+                     th:text="${item.member.nickname}"></div>
             </div>
 
             <div class="mb-3">
@@ -56,9 +52,9 @@
                           th:text="${item.content}" disabled></textarea>
             </div>
 
-            <!--             버튼 -->
+            <!--  버튼 -->
             <a th:href="@{/board/}" class="btn btn-success">목록</a>
-            <span th:if="${username == board.getMemberId()}">
+            <span th:if="${username == board.member.id}">
                 <a th:href="@{/board/page/update/{id}(id=${item.id})}" class="btn btn-primary">수정</a>
                 <input type="button" onclick="fnDeleteBtn()" class="btn btn-danger" value="삭제"/>
             </span>
@@ -66,185 +62,81 @@
     </form>
 </div>
 
-
-<!--
-<%&#45;&#45; 댓글 영역 &#45;&#45;%>
 <div class="container">
     <br/>
     <h3 class="my-3 border-bottom pb-2">댓글 작업중 ❗❗❗</h3>
-
-    <div class="container comment-box">
-
-        <div class="mb-3 row">
-            <div class="col-auto">
-                <label for="c_writer" class="col-form-label">댓글 작성자</label>
-            </div>
-            <div class="col-auto">
-                <input type="text" name="c_writer" id="c_writer" maxlength="10" class="form-control"
-                       placeholder="10자 이내">
-            </div>
-            <div class="col-auto">
-                <label for="c_password" class="col-form-label">비번 입력</label>
-            </div>
-            <div class="col-auto">
-                <input type="password" name="c_password" id="c_password" maxlength="10" class="form-control"
-                       placeholder="10자 이내">
-            </div>
-        </div>
-        <div class="mb-3 row">
-                    <textarea rows="1" cols="90" name="c_contents" id="c_contents" placeholder="50자 이내로 댓글을 작성해주세요."
-                              maxlength="50" class="form-control"></textarea>
-        </div>
-        <input type="hidden" id="reg_dt" name="reg_dt">
-        <p>
-            <button id="regComment" class="btn btn-outline-primary">댓글 작성</button>
-        </p>
-    </div>
 </div>
--->
-
-<br/>
 <div class="container">
-    <h5 class="my-3 border-bottom pb-2" id="commentBox">댓글 리스트</h5>
-    <!--    <%&#45;&#45;    <div class="comment-count"> 댓글 <span id="count">0</span></div>&#45;&#45;%>-->
-    <div class="commentList">댓글 목록</div>
+    <!-- 댓글 작성 부분 -->
+    <div id="comment-write" class="my-3 border-bottom pb-2">
+        <input type="hidden" id="writer" placeholder="작성자" th:value="${username}" readonly>
+        <input type="text" id="nickname" placeholder="작성자" th:value="${usernickname}" readonly>
+
+        <input type="text" id="comments" placeholder="내용">
+        <button id="comment-writer-btn" onclick="fnCommentsBtn()">댓글작성</button>
+    </div>
+
+    <!-- 댓글 출력 부분 -->
+    <h5 class="my-3 border-bottom pb-2">댓글 리스트</h5>
+    <ul id="commentList">
+        <li th:each="comment : ${comments}">
+            <span th:text="${comment.member.nickname}">Comment Content</span>
+            <span th:text="${comment.comments}">Comment Content</span>
+        </li>
+    </ul>
+
+    <!--<div class="comment-count"> 댓글 <span id="count">0</span></div>-->
 </div>
 
 
 <script th:inline="javascript">
-    // 게시물 삭제
 
+    <!-- 게시물 삭제 -->
     /*<![CDATA[*/
     function fnDeleteBtn() {
-
-        // 초반에 기능을 구현했을 때는 비밀번호 입력 시, 숫자만 인식하고 문자로 입력했을 시에는 프롬프트의 '확인' 버튼이 작동을 안 함
-        // 백에서 model.addAttribute로 넘긴 패스워드를 const에 담았는데! 이때 "" <- 큰 따옴표가 빠져서 그랬던 거임
-        // db에서 pw를 문자열 처리했기 때문에, 넘겨 받을 때도 문자열 처리를 한 후, 사용자가 입력한 값이랑 비교를 해야함
-
-        // <c:forEach var="board" items="${board}" varStatus="status">
-
-        // confirm("게시물을 삭제하시겠습니까?.")
-        // location.href = "/page/delete/${board.b_no}"
-
         if (confirm('정말로 삭제하시겠습니까?')) {
-            let boardNo = [[${board.id}]];
             location.href = /*[[@{/board/page/delete/{id}(id=${board.id})}]]*/ '';
         }
     }
 
+
+        function fnCommentsBtn() {
+            const memberId = document.getElementById("writer").value;
+            const comments = document.getElementById("comments").value;
+            const nickname = document.getElementById("nickname").value;
+            console.log("memberId: " + memberId + "comments: " + comments + "nickname: " + nickname);
+
+            const boardId = /*[[${board.id}]]*/ 'REPLACE_WITH_BOARD_ID'; // 게시글 번호
+
+                $.ajax({
+                // 요청방식: post, 요청주소: /comments/add, 요청데이터: 작성자, 작성내용, 게시글번호
+                type: "post",
+                url: "/comments/add",
+                data: {
+                    "writer": memberId,
+                    "comments": comments,
+                    "boardId": boardId,
+                    "nickname": nickname
+                },
+                success: function (res) {
+                    console.log("요청 성공", res);
+                    var newCommentHtml = '<li><span>' + nickname + '</span>  <span>' + res.comments + '</span></li>';
+                    console.log(newCommentHtml); // 새로운 댓글 HTML 확인
+                    $('#commentList').append(newCommentHtml); // 댓글 리스트에 새로운 댓글 추가
+                    document.getElementById("comments").value = ""; // 입력 필드 초기화
+                },
+                error: function (err) {
+                    console.log("요청 실패", err);
+                }
+            });
+        };
+
+
+
+
     /*]]>*/
+
 </script>
-
-
-<!--// &lt;!&ndash;    // 댓글 입력&ndash;&gt;-->
-<!--&lt;!&ndash;    $('#regComment').click(function () {&ndash;&gt;-->
-<!--&lt;!&ndash;        <%&#45;&#45;        <c:forEach items="${comment}" var="comment">&#45;&#45;%>&ndash;&gt;-->
-<!--&lt;!&ndash;        <c:forEach var="board" items="${board}" varStatus="status">&ndash;&gt;-->
-<!--&lt;!&ndash;        const b_no = ${board.b_no};&ndash;&gt;-->
-<!--// &lt;!&ndash;        </c:forEach>&ndash;&gt;-->
-
-<!--        const c_writer = $('#c_writer').val();-->
-<!--        const c_password = $('#c_password').val();-->
-<!--        const c_contents = $('#c_contents').val();-->
-<!--        const reg_dt = $('#reg_dt').val();-->
-
-<!--        if ($('#c_writer').val() == "") {-->
-<!--            alert("작성자를 입력해주세요.");-->
-<!--            $('#c_writer').focus();-->
-<!--            return-->
-<!--        }-->
-<!--        if ($('#c_password').val() == "") {-->
-<!--            alert("비밀번호를 입력해주세요.");-->
-<!--            $('#c_password').focus();-->
-<!--            return-->
-<!--        }-->
-<!--        if ($('#c_contents').val() == "") {-->
-<!--            alert("내용을 입력해주세요.");-->
-<!--            $('#c_contents').focus();-->
-<!--            return-->
-<!--        }-->
-
-<!--        $.ajax({-->
-<!--            type: 'post',-->
-<!--            url: '<c:url value="/comment/write"/>',-->
-<!--            data: JSON.stringify({-->
-<!--                "b_no": b_no,-->
-<!--                "c_writer": c_writer,-->
-<!--                "c_password": c_password,-->
-<!--                "c_contents": c_contents-->
-<!--            }),-->
-<!--            contentType: 'application/json',-->
-<!--            success: function (data) {-->
-<!--                console.log("통신성공" + data);-->
-<!--                if (data === "InsertSuccess") {-->
-<!--                    alert("댓글 등록이 완료되었습니다.")-->
-<!--                    console.log("댓글 등록 완료")-->
-
-<!--                    $('#c_writer').val("");-->
-<!--                    $('#c_password').val("");-->
-<!--                    $('#c_contents').val("");-->
-<!--                    $('#reg_dt').val(reg_dt);-->
-
-<!--                    getList();-->
-
-<!--                } else {-->
-<!--                    alert("실패");-->
-<!--                    console.log("댓글 실패")-->
-<!--                }-->
-<!--            },-->
-<!--            error: function () {-->
-<!--                alert("통신 실패");-->
-<!--            }-->
-<!--        });-->
-
-<!--    });-->
-
-
-<!--    getList();-->
-
-<!--    function getList() {-->
-<!--        <c:forEach var="board" items="${board}" varStatus="status">-->
-<!--        const b_no = ${board.b_no};-->
-<!--// &lt;!&ndash;        const count =${board.commentcount}&ndash;&gt;-->
-<!--// &lt;!&ndash;        </c:forEach>&ndash;&gt;-->
-<!--// &lt;!&ndash;        const c_writer = $('#c_writer').val();&ndash;&gt;-->
-<!--// &lt;!&ndash;        const c_password = $('#c_password').val();&ndash;&gt;-->
-<!--// &lt;!&ndash;        const c_contents = $('#c_contents').val();&ndash;&gt;-->
-<!--// &lt;!&ndash;        const reg_dt = $('#reg_dt').val();&ndash;&gt;-->
-<!--//-->
-<!--// &lt;!&ndash;        <%&#45;&#45;        <c:forEach items="${comment}" var="comment">&#45;&#45;%>&ndash;&gt;-->
-<!--// &lt;!&ndash;        $.getJSON(&ndash;&gt;-->
-<!--// &lt;!&ndash;            "<c:url value='/comment/commentList/'/>" + b_no, function (data) {&ndash;&gt;-->
-
-<!--                let list = data;-->
-<!--                console.log("댓글 개수: " + list.length);-->
-
-<!--                let listLength = list.length;-->
-<!--                document.querySelector("#commentBox").innerHTML = "댓글 리스트 " + listLength + "개";-->
-
-
-<!--                let comment_html = "<div>";-->
-<!--                for (let i = 0; i < list.length; i++) {-->
-
-
-<!--                    let content = list[i].c_contents;-->
-<!--                    let writer = list[i].c_writer;-->
-<!--                    let reg_dt = list[i].reg_dt;-->
-<!--//-->
-<!--//-->
-<!--&lt;!&ndash;                    comment_html += "<div><span id='c_writer'><strong>" + writer + " / " +  reg_dt + "</strong></span><br/>";&ndash;&gt;-->
-<!--// &lt;!&ndash;                    comment_html += "<span id='c_contents' class='form-control'>" + content + "</span><br>";&ndash;&gt;-->
-<!--//-->
-<!--// &lt;!&ndash;                    comment_html += "</div><hr>";&ndash;&gt;-->
-<!--//-->
-<!--// &lt;!&ndash;                }&ndash;&gt;-->
-<!--//-->
-<!--// &lt;!&ndash;                $(".commentList").html(comment_html);&ndash;&gt;-->
-<!--//-->
-<!--// &lt;!&ndash;            }&ndash;&gt;-->
-<!--// &lt;!&ndash;        )&ndash;&gt;-->
-<!--// &lt;!&ndash;        <%&#45;&#45;        </c:forEach>&#45;&#45;%>&ndash;&gt;-->
-<!--// &lt;!&ndash;    }&ndash;&gt;-->
 
 </body>
 </html>

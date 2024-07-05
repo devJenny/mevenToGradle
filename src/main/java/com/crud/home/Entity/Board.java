@@ -18,9 +18,9 @@ public class Board {
     private Long id;
 
     @Comment("회원 ID")
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "member_id")
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Comment("제목")
     private String title;

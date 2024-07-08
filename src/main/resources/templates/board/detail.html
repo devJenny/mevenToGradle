@@ -64,7 +64,7 @@
 
 <div class="container">
     <br/>
-    <h3 class="my-3 border-bottom pb-2">댓글 작업중 ❗❗❗</h3>
+    <h3 class="my-3 border-bottom pb-2">댓글</h3>
 </div>
 <div class="container">
     <!-- 댓글 작성 부분 -->
@@ -77,13 +77,13 @@
     </div>
 
     <!-- 댓글 출력 부분 -->
-    <h5 class="my-3 border-bottom pb-2">댓글 리스트</h5>
-    <ul id="commentList">
-        <li th:each="comment : ${comments}">
-            <span th:text="${comment.member.nickname}">Comment Content</span>
-            <span th:text="${comment.comments}">Comment Content</span>
-        </li>
-    </ul>
+<!--    <h5 class="my-3 border-bottom pb-2">댓글 리스트</h5>-->
+    <table class="table" id="commentList">
+        <tr th:each="comment : ${comments}">
+            <td th:text="${comment.comments}">Comment Content</td>
+            <td th:text="${comment.member.nickname}">Comment Content</td>
+        </tr>
+    </table>
 
     <!--<div class="comment-count"> 댓글 <span id="count">0</span></div>-->
 </div>
@@ -120,7 +120,7 @@
                 },
                 success: function (res) {
                     console.log("요청 성공", res);
-                    var newCommentHtml = '<li><span>' + nickname + '</span>  <span>' + res.comments + '</span></li>';
+                    var newCommentHtml = '<tr><td>' + res.comments + '</td>  <td>' + nickname + '</td></tr>';
                     console.log(newCommentHtml); // 새로운 댓글 HTML 확인
                     $('#commentList').append(newCommentHtml); // 댓글 리스트에 새로운 댓글 추가
                     document.getElementById("comments").value = ""; // 입력 필드 초기화

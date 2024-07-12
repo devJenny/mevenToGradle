@@ -66,9 +66,10 @@
     <br/>
     <h3 class="my-3 border-bottom pb-2">댓글</h3>
 </div>
-<div class="container">
+
+<div id=class="container">
     <!-- 댓글 작성 부분 -->
-    <div id="comment-write" class="my-3 border-bottom pb-2">
+    <div id="comment-write" class="container my-3 border-bottom pb-2">
         <input type="hidden" id="writer" placeholder="작성자" th:value="${username}" readonly>
         <input type="text" id="nickname" placeholder="작성자" th:value="${usernickname}" readonly>
 
@@ -77,8 +78,8 @@
     </div>
 
     <!-- 댓글 출력 부분 -->
-<!--    <h5 class="my-3 border-bottom pb-2">댓글 리스트</h5>-->
-    <table class="table" id="commentList">
+    <!--    <h5 class="my-3 border-bottom pb-2">댓글 리스트</h5>-->
+    <table class="table container my-3" id="commentList">
         <tr th:each="comment : ${comments}">
             <td th:text="${comment.comments}">Comment Content</td>
             <td th:text="${comment.member.nickname}">Comment Content</td>
@@ -87,6 +88,9 @@
 
     <!--<div class="comment-count"> 댓글 <span id="count">0</span></div>-->
 </div>
+
+<!--<h1>댓글 알림</h1>-->
+<!--<ul id="notifications"></ul>-->
 
 
 <script th:inline="javascript">
@@ -100,38 +104,77 @@
     }
 
 
-        function fnCommentsBtn() {
-            const memberId = document.getElementById("writer").value;
-            const comments = document.getElementById("comments").value;
-            const nickname = document.getElementById("nickname").value;
-            console.log("memberId: " + memberId + "comments: " + comments + "nickname: " + nickname);
+    const username = /*[[${username}]]*/ 'REPLACE_WITH_USER_ID'; // 사용자 ID
 
-            const boardId = /*[[${board.id}]]*/ 'REPLACE_WITH_BOARD_ID'; // 게시글 번호
+    function fnCommentsBtn() {
+        const memberId = document.getElementById("writer").value;
+        const comments = document.getElementById("comments").value;
+        const nickname = document.getElementById("nickname").value;
+        console.log("memberId: " + memberId + "comments: " + comments + "nickname: " + nickname);
 
-                $.ajax({
-                // 요청방식: post, 요청주소: /comments/add, 요청데이터: 작성자, 작성내용, 게시글번호
-                type: "post",
-                url: "/comments/add",
-                data: {
-                    "writer": memberId,
-                    "comments": comments,
-                    "boardId": boardId,
-                    "nickname": nickname
-                },
-                success: function (res) {
-                    console.log("요청 성공", res);
-                    var newCommentHtml = '<tr><td>' + res.comments + '</td>  <td>' + nickname + '</td></tr>';
-                    console.log(newCommentHtml); // 새로운 댓글 HTML 확인
-                    $('#commentList').append(newCommentHtml); // 댓글 리스트에 새로운 댓글 추가
-                    document.getElementById("comments").value = ""; // 입력 필드 초기화
-                },
-                error: function (err) {
-                    console.log("요청 실패", err);
-                }
+        const boardId = /*[[${board.id}]]*/ 'REPLACE_WITH_BOARD_ID'; // 게시글 번호
+
+
+        $.ajax({
+            // 요청방식: post, 요청주소: /comments/add, 요청데이터: 작성자, 작성내용, 게시글번호
+            type: "post",
+            url: "/comments/add",
+            data: {
+                "writer": memberId,
+                "comments": comments,
+                "boardId": boardId,
+                "nickname": nickname
+            },
+            success: function (res) {
+                console.log("요청 성공", res);
+                console.log("유저 id: " + username)
+
+                var newCommentHtml = '<tr><td>' + res.comments + '</td>  <td>' + nickname + '</td></tr>';
+                console.log(newCommentHtml); // 새로운 댓글 HTML 확인
+                $('#commentList').append(newCommentHtml); // 댓글 리스트에 새로운 댓글 추가
+                document.getElementById("comments").value = ""; // 입력 필드 초기화
+
+
+            },
+            error: function (err) {
+                console.log("요청 실패", err);
+            }
+        });
+    };
+
+
+    const userId = /*[[${#authentication.principal.member.id}]]*/ 'REPLACE_WITH_USER_ID'; // 사용자 ID
+    const member = /*[[${#authentication.principal.member}]]*/ 'REPLACE_WITH_USER_ID'; // 사용자 ID
+    console.log("member" + member)
+
+    // WebSocket 연결 설정
+    let socket = new SockJS('/websocket');
+    let stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/comments', function (message) {
+            let notification = message.body; // 일반 텍스트 메시지 그대로 사용
+            // showNotification(notification, 1);
+            showNotification(notification);
+        });
+    });
+
+    // 알림을 표시하는 함수
+    // function showNotification(message, commentId) {
+    function showNotification(message) {
+
+        // 크롬 웹 알림 표시
+        // if (commentId != userId && Notification.permission === "granted") {
+        if (Notification.permission === "granted") {
+            // console.log("유저 id: " + username)
+            // console.log("코멘트 id: " + commentId)
+            let notification = new Notification('새로운 댓글 알림', {
+                body: message,
+                requireInteraction: true // X 버튼을 끄기 전까지 유지
             });
-        };
-
-
+        }
+    }
 
 
     /*]]>*/

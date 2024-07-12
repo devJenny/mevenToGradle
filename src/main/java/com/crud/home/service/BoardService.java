@@ -5,7 +5,6 @@ import com.crud.home.Entity.Member;
 import com.crud.home.Repository.BoardRepository;
 import com.crud.home.Repository.CommentsRepository;
 import com.crud.home.Repository.MemberRepository;
-import com.crud.home.config.auth.PrincipalDetails;
 import com.crud.home.domain.BoardReqDto;
 import com.crud.home.mapper.BoardMapper;
 import jakarta.persistence.EntityNotFoundException;
